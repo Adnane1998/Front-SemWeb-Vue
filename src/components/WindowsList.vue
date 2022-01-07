@@ -1,5 +1,6 @@
 <template>
   <div class="windows-list pt-3">
+   
     <windows-list-item 
       v-for="window in windows"
       :window="window"
@@ -36,6 +37,7 @@ export default {
   methods: {
     updateWindow(newWindow) {
       /* Find the place of window objectw ith the same Id in the array, and replace it */
+
       let index = this.windows.findIndex(window => window.id === newWindow.id);
       this.windows.splice(index, 1, newWindow);
     }

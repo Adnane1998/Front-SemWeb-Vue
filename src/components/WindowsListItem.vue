@@ -1,17 +1,21 @@
 <template>
+
   <div class="window border border-secondary rounded p-2 mb-2" :class="{expanded: isExpanded}">
+    
     <div class="top-row d-flex" @click="toggleExpand">
+      
       <div class="window-name fw-bold pe-3">{{window.hostRoom}}</div>
       <div class="room-name text-muted  pe-3">{{window.resultTime}}h   </div>
       
-       <div class="room-name text-muted">{{window.result}} °C</div>
+       <div class="room-name text-muted pe-3">Inside:{{window.result}} °C</div>
+       <div class="room-name text-muted pe-3">Outside:{{window.result_weather}}</div>
 
       <div class="open-status ms-4" :class="{open: isWindowOpen, closed: !isWindowOpen}">
         <template v-if="isWindowOpen">
-          <span class="icon">&#x2B24;</span> Open
+          <span class="icon">&#x2B24;</span> Interest Of
         </template>
         <template v-else>
-          <span class="icon">&#x2716;</span> Closed
+          <span class="icon">&#x2716;</span> Alarming
         </template>
       </div>
 
@@ -19,13 +23,7 @@
         {{ isExpanded ? '&#9660;' : '&#9658;' }}
       </div>
     </div>
-    <template v-if="isExpanded">
-      <hr/>
-      <div class="details d-flex">
-        <button type="button" class="btn btn-secondary me-2" @click="switchWindow">{{ isWindowOpen ? 'Close' : 'Open' }} window</button>
-        <button type="button" class="btn btn-danger disabled">Delete window</button>
-      </div>
-    </template>
+ 
   </div>
 </template>
 
@@ -44,17 +42,14 @@ export default {
   }, 
   computed: {
     isWindowOpen: function() {
-      return this.window.windowStatus === 'OPEN'; 
-    }
+console.log(this.result_weather);
+if( this.window.result.replace('°C','') < this.window.result_weather)
+      return true ; 
+    
+    else return false;
+  }
   },
-    created: async function() {
-    let response = await axios.get(`${API_HOST}/api/weather`);
-    let weather = response.data;
-    console.log(weather);
-    this.weather = weather;
-         let index = this.weather.findIndex(window => window.resultTime === this.window.resultTime);
-         console.log(index)
-  },
+ 
   methods: {
     toggleExpand() {
       this.isExpanded = !this.isExpanded;
