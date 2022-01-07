@@ -9,14 +9,21 @@
       
        <div class="room-name text-muted pe-3">Inside:{{window.result}} °C</div>
        <div class="room-name text-muted pe-3">Outside:{{window.result_weather}}</div>
+      
 
       <div class="open-status ms-4" :class="{open: isWindowOpen, closed: !isWindowOpen}">
         <template v-if="isWindowOpen">
           <span class="icon">&#x2B24;</span> Interest Of
         </template>
-        <template v-else>
+        <template v-if="!isWindowOpen">
           <span class="icon">&#x2716;</span> Alarming
         </template>
+      </div>
+        <div class="opens-status ms-4" :class="{opens: isNormal}">
+        <template v-if="isNormal">
+          <span class="icon">&#x2B24;</span> Normal
+        </template>
+     
       </div>
 
       <div class="expand-button ms-auto">
@@ -37,17 +44,47 @@ export default {
   data: function() {
     return {
       isExpanded: false,
-      weather:[]
+      weather:[],
+      difference:0
     }
   }, 
   computed: {
     isWindowOpen: function() {
 console.log(this.result_weather);
-if( this.window.result.replace('°C','') < this.window.result_weather)
+console.log( Number(Math.round(this.window.result.replace('°C',''))));
+var difference = Number(this.window.result.replace('°C','')) - Number(this.window.result_weather.replace('°C',''))
+
+
+if( difference>15)
+{
+      return false ; 
+}
+else if( difference>=12 && difference <15)
+{
       return true ; 
+}
+else return true
+
     
-    else return false;
-  }
+    
+    },
+        isNormal: function() {
+
+console.log( Number(Math.round(this.window.result.replace('°C',''))));
+var difference = Number(this.window.result.replace('°C','')) - Number(this.window.result_weather.replace('°C',''))
+console.log(difference);
+
+if( difference>10.00  && difference<12.00 )
+{
+      return true ; 
+      
+}
+
+    
+    
+    }
+    
+  
   },
  
   methods: {
